@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>farafonov.org | Family Archive</title>
+    
+    <!-- Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <!-- UI Resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#496455",
+                    "surface-container": "#e3efff",
+                    "on-tertiary-fixed": "#1a1c1a",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c2c8c2",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#b0cdbb",
+                    "primary": "#173124",
+                    "surface-bright": "#f7f9ff",
+                    "tertiary-fixed": "#e3e2e0",
+                    "primary-container": "#2d4739",
+                    "tertiary": "#2b2c2a",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#c9dcf3",
+                    "surface": "#f7f9ff",
+                    "on-secondary-fixed-variant": "#454747",
+                    "surface-container-low": "#edf4ff",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#ccead6",
+                    "inverse-primary": "#b0cdbb",
+                    "on-primary-fixed-variant": "#324c3e",
+                    "tertiary-fixed-dim": "#c7c6c4",
+                    "on-surface": "#091d2e",
+                    "on-tertiary-container": "#aeaeac",
+                    "on-secondary-fixed": "#1a1c1c",
+                    "background": "#f7f9ff",
+                    "outline": "#727973",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#464745",
+                    "surface-container-highest": "#d1e4fb",
+                    "surface-container-high": "#d9eaff",
+                    "on-background": "#091d2e",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#d1e4fb",
+                    "inverse-on-surface": "#e8f2ff",
+                    "on-secondary-container": "#5f6161",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#203243",
+                    "tertiary-container": "#414240",
+                    "secondary-fixed": "#e2e2e2",
+                    "secondary": "#5d5f5f",
+                    "on-primary-fixed": "#062014",
+                    "on-primary-container": "#98b5a3",
+                    "secondary-container": "#dcdddd",
+                    "on-surface-variant": "#424844",
+                    "secondary-fixed-dim": "#c6c6c7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "margin-desktop": "48px",
+                    "gutter": "24px",
+                    "container-max": "1200px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "display-lg-mobile": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            background-color: #FBFBFA;
+            color: #1a1a1a;
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            max-height: 100vh;
+        }
+        .segmented-control {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            padding: 2px;
+        }
+        .segmented-item {
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .segmented-item.active {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            color: #173124;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at center, rgba(45, 71, 57, 0.03) 0%, transparent 70%);
+        }
+        .bg-pattern {
+            background-image: radial-gradient(#c2c8c2 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.2;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .btn-hover-effect:active {
+            transform: scale(0.98);
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Data ---
+        const TRANSLATIONS = {
+            ru: {
+                title: "Семейный архив Фарафоновых",
+                desc: "Сохраняем историю, знания и воспоминания нашей семьи для будущих поколений.",
+                descFull: "Цифровой репозиторий, посвященный сохранению наследия, историй и визуальной истории рода Фарафоновых для будущих поколений.",
+                badge: "Защищенный частный архив",
+                cta: "Перейти к порталу",
+                request: "Запросить доступ",
+                tree: "Семейное древо",
+                stories: "Устные истории",
+                visual: "Визуальное наследие",
+                footer: "© Семья Фарафоновых",
+                link: "Частный семейный архив",
+                access: "ЧАСТНЫЙ ДОСТУП",
+                langName: "Русский"
+            },
+            en: {
+                title: "Farafonov Family Archive",
+                desc: "Preserving our family's history, knowledge, and memories for generations.",
+                descFull: "A digital repository dedicated to preserving the heritage, stories, and visual history of the Farafonov lineage for future generations.",
+                badge: "Secured Private Archive",
+                cta: "Go to Portal",
+                request: "Request Access",
+                tree: "Family Tree",
+                stories: "Oral Histories",
+                visual: "Visual Legacy",
+                footer: "© Farafonov Family",
+                link: "Private family archive",
+                access: "PRIVATE ACCESS",
+                langName: "English"
+            },
+            de: {
+                title: "Familienarchiv Farafonov",
+                desc: "Bewahrung der Geschichte, des Wissens und der Erinnerungen unserer Familie für kommende Generationen.",
+                descFull: "Ein digitales Repositorium zur Bewahrung des Erbes, der Geschichten und der visuellen Geschichte der Familie Farafonov für zukünftige Generationen.",
+                badge: "Geschütztes Privates Archiv",
+                cta: "Zum Portal",
+                request: "Zugang anfordern",
+                tree: "Stammbaum",
+                stories: "Zeitzeugnisse",
+                visual: "Visuelles Erbe",
+                footer: "© Familie Farafonov",
+                link: "Privates Familienarchiv",
+                access: "PRIVATER ZUGANG",
+                langName: "Deutsch"
+            }
+        };
+
+        // --- Shared Components ---
+
+        const LanguageSwitcher = ({ currentLang, setLang }) => (
+            <div className="segmented-control flex items-center font-label-sm text-label-sm text-secondary">
+                {Object.keys(TRANSLATIONS).map(lang => (
+                    <button 
+                        key={lang}
+                        onClick={() => setLang(lang)}
+                        className={`segmented-item capitalize ${currentLang === lang ? 'active' : ''}`}
+                    >
+                        {TRANSLATIONS[lang].langName}
+                    </button>
+                ))}
+            </div>
+        );
+
+        const DesktopLayout = ({ lang, setLang }) => {
+            const t = TRANSLATIONS[lang];
+            return (
+                <div className="h-screen flex flex-col overflow-hidden">
+                    <header className="px-margin-desktop py-8 max-w-container-max mx-auto w-full flex-shrink-0">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-8">
+                                <div className="font-headline-md text-headline-md font-bold text-primary tracking-tight whitespace-nowrap">
+                                    farafonov.org
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <LanguageSwitcher currentLang={lang} setLang={setLang} />
+                                <button className="text-secondary hover:text-primary transition-colors p-2">
+                                    <span className="material-symbols-outlined">language</span>
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="flex-grow flex items-center justify-center relative px-margin-desktop hero-gradient py-4">
+                        <div className="text-center max-w-2xl relative z-10 animate-fade-in">
+                            <div className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-outline-variant bg-white/50 backdrop-blur-sm">
+                                <span className="material-symbols-outlined text-[18px] text-primary" style={{fontVariationSettings: "'FILL' 1"}}>shield</span>
+                                <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary">{t.badge}</span>
+                            </div>
+                            <h1 className="font-display-lg text-display-lg text-on-surface mb-4 tracking-tight whitespace-nowrap">
+                                {t.title}
+                            </h1>
+                            <p className="font-body-lg text-body-lg text-secondary mb-3 leading-relaxed">
+                                {t.desc}
+                            </p>
+                            <p className="font-body-md text-body-md text-secondary opacity-60 mb-8">
+                                {lang === 'ru' ? 'Частный доступ только для членов семьи.' : 
+                                 lang === 'de' ? 'Privater Zugang nur für Familienmitglieder.' : 
+                                 'Private access for family members only.'}
+                            </p>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-gutter">
+                                <button className="btn-hover-effect bg-primary text-white font-label-sm text-label-sm px-10 py-4 rounded-lg shadow-xl shadow-primary/10 hover:bg-primary-container transition-all duration-300 flex items-center gap-3 group">
+                                    {t.cta}
+                                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                                </button>
+                                <button className="btn-hover-effect text-secondary font-label-sm text-label-sm px-8 py-4 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-all">
+                                    {t.request}
+                                </button>
+                            </div>
+
+                            <div className="mt-12 grid grid-cols-3 gap-12 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
+                                <div className="flex flex-col items-center gap-3">
+                                    <span className="material-symbols-outlined text-4xl">{lang === 'ru' ? 'account_tree' : 'menu_book'}</span>
+                                    <span className="font-label-sm text-label-sm">{t.tree}</span>
+                                </div>
+                                <div className="flex flex-col items-center gap-3">
+                                    <span className="material-symbols-outlined text-4xl">auto_stories</span>
+                                    <span className="font-label-sm text-label-sm">{t.stories}</span>
+                                </div>
+                                <div className="flex flex-col items-center gap-3">
+                                    <span className="material-symbols-outlined text-4xl">photo_library</span>
+                                    <span className="font-label-sm text-label-sm">{t.visual}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer className="flex flex-col items-center justify-center py-10 w-full bg-transparent flex-shrink-0">
+                        <div className="w-32 h-[1px] bg-outline-variant mb-6 opacity-40"></div>
+                        <p className="font-label-sm text-label-sm text-secondary opacity-60 tracking-wider">
+                            {t.footer}
+                        </p>
+                        <div className="mt-4 flex gap-6">
+                            <a className="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors hover:underline underline-offset-4" href="#">{t.link}</a>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const MobileLayout = ({ lang, setLang }) => {
+            const t = TRANSLATIONS[lang];
+            return (
+                <div className="h-screen flex flex-col overflow-hidden bg-background">
+                    <nav className="bg-surface dark:bg-background flex justify-between items-center px-margin-mobile py-base w-full z-50 flex-shrink-0">
+                        <div className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">farafonov.org</div>
+                        <button 
+                            onClick={() => {
+                                const langs = Object.keys(TRANSLATIONS);
+                                const nextIndex = (langs.indexOf(lang) + 1) % langs.length;
+                                setLang(langs[nextIndex]);
+                            }}
+                            className="flex items-center gap-2 px-3 py-1 bg-secondary-container rounded-full text-secondary font-label-sm text-label-sm"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">language</span>
+                            <span>{t.langName}</span>
+                        </button>
+                    </nav>
+
+                    <main className="flex-grow flex flex-col items-center justify-center relative px-margin-mobile text-center">
+                        <div className="absolute inset-0 bg-pattern pointer-events-none"></div>
+                        
+                        <div className="relative z-10 max-w-sm flex flex-col items-center gap-6 animate-fade-in">
+                            <div className="w-16 h-16 bg-primary-container rounded-xl flex items-center justify-center text-on-primary-container shadow-sm border border-outline-variant/30">
+                                <span className="material-symbols-outlined text-4xl" style={{fontVariationSettings: "'FILL' 1"}}>history_edu</span>
+                            </div>
+                            <div className="space-y-4">
+                                <h1 className="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">
+                                    {t.title}
+                                </h1>
+                                <p className="font-body-md text-body-md text-secondary leading-relaxed px-2">
+                                    {t.descFull}
+                                </p>
+                            </div>
+
+                            <div className="w-full flex flex-col items-center gap-4 pt-4">
+                                <button className="w-full py-4 bg-primary text-on-primary rounded-xl font-body-lg text-body-lg font-bold shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+                                    {t.cta}
+                                    <span className="material-symbols-outlined">arrow_forward</span>
+                                </button>
+                                <div className="flex items-center gap-2 text-secondary/70">
+                                    <span className="material-symbols-outlined text-[18px]">lock</span>
+                                    <span className="font-label-sm text-label-sm uppercase tracking-widest">{t.access}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="absolute bottom-12 w-full max-w-xs px-margin-mobile opacity-40">
+                            <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-outline-variant/50 shadow-sm">
+                                <div className="absolute inset-0 bg-secondary-container/20"></div>
+                                <img 
+                                    className="w-full h-full object-cover grayscale mix-blend-multiply opacity-60" 
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAuMWLRc-js6nXDHJ_Opc95pZBMG19aV2NoDQ_rPJGp70-GJfX_DN6dwightkEqn2I8nRur3A93BxKWGj0oMV90c-e19VLriWqfO5DWsTpfXJf2Q9mc67zGSyswf6QI_GQY_mvoFkjY279q_uAZsNPzL3ebfvR02ON_tZ6IZ-qwZMjmvsTeBFH7hCmI8i6nNFt7SfDUgE4jyvBe5FS3zf27-jFdqKT6wO9Z5g9lot0X1bgcdITejZ8Ekx8Cx9D1sNlG_cr80Kq8ck"
+                                    alt="Family History"
+                                />
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer className="bg-surface dark:bg-background border-t border-outline-variant dark:border-outline py-6 w-full z-50 flex-shrink-0">
+                        <div className="flex flex-col items-center justify-center gap-2 w-full">
+                            <span className="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed-dim">
+                                {t.footer}
+                            </span>
+                            <div className="flex gap-4">
+                                <a className="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary underline transition-all duration-200" href="#">
+                                    {t.link}
+                                </a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        // --- Main App ---
+
+        const App = () => {
+            const [lang, setLang] = useState('ru');
+            const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+            useEffect(() => {
+                const handleResize = () => setIsMobile(window.innerWidth < 768);
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
+
+            return (
+                <Routes>
+                    <Route 
+                        path="/" 
+                        element={
+                            isMobile 
+                                ? <MobileLayout lang={lang} setLang={setLang} /> 
+                                : <DesktopLayout lang={lang} setLang={setLang} />
+                        } 
+                    />
+                </Routes>
+            );
+        };
+
+        // --- Initializer ---
+        const rootElement = document.getElementById("root");
+        const root = createRoot(rootElement);
+        root.render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+    </script>
+</body>
+</html>
